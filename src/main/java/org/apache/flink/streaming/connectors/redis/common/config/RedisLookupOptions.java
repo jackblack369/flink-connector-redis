@@ -1,6 +1,9 @@
 package org.apache.flink.streaming.connectors.redis.common.config;
 
+import lombok.ToString;
+
 /** query options. @Author:jeff.zou @Date: 2022/3/9.14:37 */
+@ToString
 public class RedisLookupOptions {
 
     private final long cacheMaxSize;

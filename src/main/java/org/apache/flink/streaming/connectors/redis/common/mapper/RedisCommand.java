@@ -1,6 +1,9 @@
 package org.apache.flink.streaming.connectors.redis.common.mapper;
 
+import lombok.ToString;
+
 /** All available commands for Redis. Each command belongs to a {@link RedisDataType} group. */
+@ToString
 public enum RedisCommand {
 
     /**

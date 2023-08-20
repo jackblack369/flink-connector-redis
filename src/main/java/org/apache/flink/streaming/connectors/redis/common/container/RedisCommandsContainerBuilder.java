@@ -11,6 +11,8 @@ import org.apache.flink.streaming.connectors.redis.common.config.FlinkConfigBase
 import org.apache.flink.streaming.connectors.redis.common.config.FlinkSentinelConfig;
 import org.apache.flink.streaming.connectors.redis.common.config.FlinkSingleConfig;
 import org.apache.flink.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 /** The builder for {@link RedisCommandsContainer}. */
 public class RedisCommandsContainerBuilder {
 
+    public static final Logger LOG = LoggerFactory.getLogger(RedisCommandsContainerBuilder.class);
     /**
      * Initialize the {@link RedisCommandsContainer} based on the instance type.
      *
@@ -136,14 +139,19 @@ public class RedisCommandsContainerBuilder {
                                         Integer.parseInt(redis[1]),
                                         sentinelConfig.getSentinelsPassword());
                             } else {
+//                                builder.withSentinel(
+//                                                redis[0],
+//                                                Integer.parseInt(redis[1]),
+//                                                sentinelConfig.getSentinelsPassword())
+//                                        .withPassword(sentinelConfig.getPassword());
                                 builder.withSentinel(
                                                 redis[0],
-                                                Integer.parseInt(redis[1]),
-                                                sentinelConfig.getSentinelsPassword())
+                                                Integer.parseInt(redis[1]))
                                         .withPassword(sentinelConfig.getPassword());
                             }
                         });
 
+//        LOG.info("RedisClient build config:[{}]", builder);
         return new RedisContainer(RedisClient.create(builder.build()));
     }
 }

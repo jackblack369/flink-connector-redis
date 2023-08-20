@@ -63,20 +63,24 @@ public class RedisLookupFunction extends AsyncTableFunction<RowData> {
         this.maxRetryTimes = redisLookupOptions.getMaxRetryTimes();
         this.loadAll = redisLookupOptions.getLoadAll();
         this.redisValueDataStructure = redisLookupOptions.getRedisValueDataStructure();
+        RedisCommandBaseDescription redisCommandDescription = redisMapper.getCommandDescription();
+        this.redisCommand = redisCommandDescription.getRedisCommand();
+
+        LOG.info("RedisLookupFunction options:[{}] ", redisLookupOptions);
+        LOG.info("redisCommand:[{}] ", redisCommand);
 
         if (this.loadAll) {
             Preconditions.checkArgument(
                     cacheMaxSize != -1 && cacheTtl != -1,
                     "cache must be opened by cacheMaxSize and cacheTtl when u want to load all elements to cache.");
             Preconditions.checkArgument(
-                    this.loadAll && redisCommand == RedisCommand.HSET,
+                    this.loadAll && redisCommand == RedisCommand.HGET,
                     "just hget support load all.");
         }
 
-        RedisCommandBaseDescription redisCommandDescription = redisMapper.getCommandDescription();
         Preconditions.checkNotNull(
                 redisCommandDescription, "Redis Mapper data type description can not be null");
-        this.redisCommand = redisCommandDescription.getRedisCommand();
+
         Preconditions.checkArgument(
                 redisCommand == RedisCommand.HGET || redisCommand == RedisCommand.GET,
                 "unsupport command for query redis: %s, just get hget.",
